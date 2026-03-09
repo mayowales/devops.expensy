@@ -1,0 +1,54 @@
+services:
+  mongo:
+    image: mongo:7
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: redis-server --requirepass someredispassword
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  backend:
+    build:
+      context: ./expensy_backend
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "8706:8706"
+    environment:
+      PORT: 8706
+      DATABASE_URI: mongodb://root:example@mongo:27017
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: someredispassword
+    depends_on:
+      - mongo
+      - redis
+
+  frontend:
+    build:
+      context: ./expensy_frontend
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: http://localhost:8706
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongo
+      - redis
+
+volumes:
+  mongo_data:
+  redis_data:
