@@ -67,7 +67,7 @@ resource "kubernetes_service" "frontend" {
   }
 
   spec {
-    type     = "LoadBalancer"
+    type     = "ClusterIP"
     selector = { app = "frontend" }
     port {
       port        = 3000
