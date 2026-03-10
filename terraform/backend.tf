@@ -99,7 +99,7 @@ resource "kubernetes_service" "backend" {
   }
 
   spec {
-    type     = "LoadBalancer"
+    type     = "ClusterIP"
     selector = { app = "backend" }
     port {
       port        = 8706
