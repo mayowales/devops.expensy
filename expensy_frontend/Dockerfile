@@ -4,7 +4,7 @@ WORKDIR /app
 
 # Install dependencies
 COPY package*.json ./
-RUN npm ci
+RUN npm install
 
 # 🔥 Build-time variable (VERY IMPORTANT)
 ARG NEXT_PUBLIC_API_URL
