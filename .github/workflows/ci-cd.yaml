@@ -134,9 +134,10 @@ jobs:
 
       # Set up kubectl with your cluster credentials
       - name: Configure kubectl
-        uses: azure/k8s-set-context@v4
-        with:
-          kubeconfig: ${{ secrets.KUBE_CONFIG }}
+        run: |
+          mkdir -p $HOME/.kube
+          echo "${{ secrets.KUBE_CONFIG }}" | base64 --decode > $HOME/.kube/config
+          chmod 600 $HOME/.kube/config
 
       # Update the backend image to the new version
       # then record saves the command in the rollout history
