@@ -1,0 +1,142 @@
+{
+  "dashboard": {
+    "title": "Expensy Monitoring",
+    "uid": "expensy-main",
+    "editable": true,
+    "timezone": "browser",
+    "panels": [
+      {
+        "id": 1,
+        "title": "MongoDB Connection Status",
+        "type": "stat",
+        "gridPos": { "h": 6, "w": 6, "x": 0, "y": 0 },
+        "datasource": "Prometheus",
+        "targets": [
+          {
+            "expr": "mongo_connection_status",
+            "legendFormat": "Status"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "mappings": [
+              {
+                "type": "value",
+                "options": {
+                  "0": { "text": "Disconnected", "color": "red" },
+                  "1": { "text": "Connected", "color": "green" }
+                }
+              }
+            ],
+            "thresholds": {
+              "steps": [
+                { "value": 0, "color": "red" },
+                { "value": 1, "color": "green" }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 2,
+        "title": "Total Expenses",
+        "type": "stat",
+        "gridPos": { "h": 6, "w": 6, "x": 6, "y": 0 },
+        "datasource": "Prometheus",
+        "targets": [
+          {
+            "expr": "expenses_total",
+            "legendFormat": "Count"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "color": { "mode": "thresholds" },
+            "thresholds": {
+              "steps": [
+                { "value": 0, "color": "blue" }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 3,
+        "title": "HTTP Requests Total",
+        "type": "stat",
+        "gridPos": { "h": 6, "w": 6, "x": 12, "y": 0 },
+        "datasource": "Prometheus",
+        "targets": [
+          {
+            "expr": "http_requests_overall_total",
+            "legendFormat": "Total"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "color": { "mode": "thresholds" },
+            "thresholds": {
+              "steps": [
+                { "value": 0, "color": "purple" }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 4,
+        "title": "HTTP Requests Rate (per minute)",
+        "type": "timeseries",
+        "gridPos": { "h": 8, "w": 18, "x": 0, "y": 6 },
+        "datasource": "Prometheus",
+        "targets": [
+          {
+            "expr": "rate(http_requests_overall_total[5m]) * 60",
+            "legendFormat": "Requests/min"
+          }
+        ]
+      },
+      {
+        "id": 5,
+        "title": "HTTP Requests by Route & Method",
+        "type": "timeseries",
+        "gridPos": { "h": 8, "w": 18, "x": 0, "y": 14 },
+        "datasource": "Prometheus",
+        "targets": [
+          {
+            "expr": "rate(http_requests_total[5m]) * 60",
+            "legendFormat": "{{method}} {{route}} ({{status_code}})"
+          }
+        ]
+      },
+      {
+        "id": 6,
+        "title": "Process CPU Usage",
+        "type": "timeseries",
+        "gridPos": { "h": 8, "w": 9, "x": 0, "y": 22 },
+        "datasource": "Prometheus",
+        "targets": [
+          {
+            "expr": "rate(process_cpu_user_seconds_total[5m])",
+            "legendFormat": "CPU Usage"
+          }
+        ]
+      },
+      {
+        "id": 7,
+        "title": "Process Memory (MB)",
+        "type": "timeseries",
+        "gridPos": { "h": 8, "w": 9, "x": 9, "y": 22 },
+        "datasource": "Prometheus",
+        "targets": [
+          {
+            "expr": "process_resident_memory_bytes / 1024 / 1024",
+            "legendFormat": "Memory (MB)"
+          }
+        ]
+      }
+    ],
+    "time": { "from": "now-1h", "to": "now" },
+    "refresh": "10s"
+  }
+}

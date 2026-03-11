@@ -1,0 +1,12 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: 'expensy-backend'
+    metrics_path: /metrics
+    static_configs:
+      - targets: ['backend:8706']
+        labels:
+          app: backend
+          namespace: wale-expensy-ns

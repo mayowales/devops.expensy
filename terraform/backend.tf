@@ -15,6 +15,11 @@ resource "kubernetes_deployment" "backend" {
     template {
       metadata {
         labels = { app = "backend" }
+        annotations = {
+          "prometheus.io/scrape" = "true"
+          "prometheus.io/port"   = "8706"
+          "prometheus.io/path"   = "/metrics"
+        }
       }
 
       spec {
@@ -102,6 +107,7 @@ resource "kubernetes_service" "backend" {
     type     = "ClusterIP"
     selector = { app = "backend" }
     port {
+      name        = "http"
       port        = 8706
       target_port = 8706
     }
